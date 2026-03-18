@@ -1,1 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Secure Access</title>
+<style>
+body {
+  background:black;
+  color:#00ffcc;
+  font-family:monospace;
+  text-align:center;
+  padding-top:80px;
+}
+h1 {
+  font-size:14px;
+  color:#008866;
+}
+input {
+  margin:10px;
+  padding:10px;
+  background:black;
+  color:#00ffcc;
+  border:1px solid #00ffcc;
+}
+button {
+  padding:10px;
+  background:black;
+  color:#00ffcc;
+  border:1px solid #00ffcc;
+}
+#msg { margin-top:15px; }
+</style>
+</head>
 
+<body>
+
+<h1>
+01110011 01110001 01101111 01100101 01101111 01111001 01101111 01111010 01101011 01110001
+</h1>
+
+<h2>> AUTH REQUIRED</h2>
+
+<input id="user" placeholder="Username"><br>
+<input id="pass" type="password" placeholder="Password"><br>
+
+<button onclick="login()">ENTER</button>
+
+<p id="msg"></p>
+
+<script>
+function login() {
+  const u = document.getElementById("user").value;
+  const p = document.getElementById("pass").value;
+
+  if (u === "dev_access" && p === "secret") {
+    document.getElementById("msg").innerText = "ACCESS GRANTED...";
+    setTimeout(() => window.location = "admin.html", 1000);
+  } else {
+    document.getElementById("msg").innerText = "ACCESS DENIED";
+  }
+}
+</script>
+
+<!--
+Binary → Text → Reverse → Decode
+-->
+</body>
+</html>
