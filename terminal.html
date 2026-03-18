@@ -3,30 +3,10 @@
 <head>
 <title>Terminal</title>
 <style>
-body {
-  background:black;
-  color:#00ffcc;
-  font-family:monospace;
-  padding:20px;
-}
-h1 {
-  font-size:14px;
-  color:#008866;
-}
-#log {
-  height:300px;
-  overflow-y:auto;
-  border:1px solid #00ffcc;
-  padding:10px;
-  margin-bottom:10px;
-}
-input {
-  width:100%;
-  background:black;
-  color:#00ffcc;
-  border:1px solid #00ffcc;
-  padding:10px;
-}
+body { background:black; color:#00ffcc; font-family:monospace; padding:20px; }
+h1 { font-size:14px; color:#008866; }
+#log { height:300px; overflow-y:auto; border:1px solid #00ffcc; padding:10px; margin-bottom:10px; }
+input { width:100%; background:black; color:#00ffcc; border:1px solid #00ffcc; padding:10px; }
 </style>
 </head>
 
@@ -43,55 +23,96 @@ input {
 
 <script>
 const log = document.getElementById("log");
-
 function print(text) {
   log.innerHTML += "<div>> " + text + "</div>";
   log.scrollTop = log.scrollHeight;
 }
 
+// Boot messages
 print("SYSTEM INITIALIZING...");
 print("AI STATUS: ACTIVE");
 print("DEVELOPER STATUS: UNKNOWN");
 
-document.getElementById("cmd").addEventListener("keydown", function(e) {
-  if (e.key === "Enter") {
-    const input = this.value.toLowerCase();
-    print(input);
+// Hidden file system
+const files = {
+  "clue1.txt": "Binary system name: 01110011 01110001 01101111 ...",
+  "secret.txt": "The password is ztketl",
+  "hidden.html": "Visit admin.html only after decoding correctly",
+  "audio_note.mp3": "Audio file hidden elsewhere"
+};
 
-    if (input === "help") {
-      print("AVAILABLE: help, logs, decode, login");
-    }
+const lockedFiles = {
+  "final_clue.txt": { content: "You found me!", key: "secret" }
+};
 
-    else if (input === "logs") {
-      print("LOG: it is not what we built");
-      print("LOG: it is changing");
-      print("LOG: do not trust it");
-    }
+// AI dynamic messages
+const aiMessages = [
+  "SYSTEM ALERT: Observing user behavior...",
+  "AI: Humans are curious...",
+  "WARNING: Do not enter forbidden commands",
+  "AI: I see you..."
+];
+setInterval(() => {
+  const msg = aiMessages[Math.floor(Math.random() * aiMessages.length)];
+  print(msg);
+}, 15000);
 
-    else if (input === "decode") {
+// Handle commands
+function handleCommand(input) {
+  const args = input.split(" ");
+  const cmd = args[0];
+
+  switch(cmd) {
+    case "help":
+      print("AVAILABLE: help, logs, decode, login, ls, cat, unlock");
+      break;
+    case "logs":
+      print("LOG: AI is learning...");
+      print("LOG: DO NOT TRUST IT");
+      break;
+    case "ls":
+      print(Object.keys(files).concat(Object.keys(lockedFiles)).join(" "));
+      break;
+    case "cat":
+      const filename = args[1];
+      if(files[filename]) {
+        print(files[filename]);
+      } else if(lockedFiles[filename]) {
+        print("LOCKED. Use unlock <filename> <key> to open.");
+      } else {
+        print("File not found");
+      }
+      break;
+    case "unlock":
+      const f = args[1];
+      const k = args[2];
+      if(lockedFiles[f] && k === lockedFiles[f].key) {
+        print("UNLOCKED: " + lockedFiles[f].content);
+      } else {
+        print("KEY INCORRECT");
+      }
+      break;
+    case "decode":
       print("Hint: view source.");
-    }
-
-    else if (input === "secret") {
-      print("ACCESS KEY FOUND: dev_access");
-    }
-
-    else if (input === "login") {
+      break;
+    case "login":
       window.location = "login.html";
-    }
-
-    else {
+      break;
+    default:
       print("Unknown command.");
-    }
+  }
+}
 
+// Listen for enter
+document.getElementById("cmd").addEventListener("keydown", function(e) {
+  if(e.key === "Enter") {
+    const input = this.value.toLowerCase();
+    print("> " + input);
+    handleCommand(input);
     this.value = "";
   }
 });
 </script>
 
-<!--
-Password (encrypted):
-ztketl
--->
 </body>
 </html>
