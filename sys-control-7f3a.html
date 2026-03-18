@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>System Control</title>
+<style>
+body { background:#111; color:#00ffcc; font-family:monospace; padding:40px; }
+h1 { color:#00ffaa; }
+</style>
+</head>
+
+<body>
+
+<h1>System Control Panel</h1>
+
+<div id="data"></div>
+
+<script>
+// HARD LOCK (only you know this)
+const password = prompt("Enter access key:");
+
+if(password !== "myrealownerkey123"){
+  document.body.innerHTML = "<h1 style='color:red;text-align:center;margin-top:100px;'>ACCESS DENIED</h1>";
+} else {
+
+  const data = document.getElementById("data");
+  const progress = JSON.parse(localStorage.getItem("progress") || "{}");
+
+  data.innerHTML = "<h2>Player Progress:</h2>";
+
+  if(Object.keys(progress).length === 0){
+    data.innerHTML += "<p>No progress yet</p>";
+  }
+
+  for(let key in progress){
+    data.innerHTML += "<p>> " + key + " : " + progress[key] + "</p>";
+  }
+
+}
+</script>
+
+</body>
+</html>
