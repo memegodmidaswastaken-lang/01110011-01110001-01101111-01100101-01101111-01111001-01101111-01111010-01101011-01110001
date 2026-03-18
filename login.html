@@ -3,31 +3,12 @@
 <head>
 <title>Secure Access</title>
 <style>
-body {
-  background:black;
-  color:#00ffcc;
-  font-family:monospace;
-  text-align:center;
-  padding-top:80px;
-}
-h1 {
-  font-size:14px;
-  color:#008866;
-}
-input {
-  margin:10px;
-  padding:10px;
-  background:black;
-  color:#00ffcc;
-  border:1px solid #00ffcc;
-}
-button {
-  padding:10px;
-  background:black;
-  color:#00ffcc;
-  border:1px solid #00ffcc;
-}
-#msg { margin-top:15px; }
+body { background:black; color:#00ffcc; font-family:monospace; text-align:center; padding-top:80px; }
+h1 { font-size:14px; color:#008866; }
+input { margin:10px; padding:10px; background:black; color:#00ffcc; border:1px solid #00ffcc; width:220px; }
+button { padding:10px; background:black; color:#00ffcc; border:1px solid #00ffcc; cursor:pointer; }
+button:hover { background:#00ffcc; color:black; }
+#msg { margin-top:15px; color:red; }
 </style>
 </head>
 
@@ -41,9 +22,7 @@ button {
 
 <input id="user" placeholder="Username"><br>
 <input id="pass" type="password" placeholder="Password"><br>
-
 <button onclick="login()">ENTER</button>
-
 <p id="msg"></p>
 
 <script>
@@ -51,17 +30,16 @@ function login() {
   const u = document.getElementById("user").value;
   const p = document.getElementById("pass").value;
 
-  if (u === "dev_access" && p === "secret") {
-    document.getElementById("msg").innerText = "ACCESS GRANTED...";
-    setTimeout(() => window.location = "admin.html", 1000);
+  if(u==="dev_access" && p==="secret") {
+    document.getElementById("msg").style.color="#00ffcc";
+    document.getElementById("msg").innerText="ACCESS GRANTED...";
+    setTimeout(()=>window.location="admin.html",1000);
   } else {
-    document.getElementById("msg").innerText = "ACCESS DENIED";
+    document.getElementById("msg").innerText="ACCESS DENIED";
   }
 }
 </script>
 
-<!--
-Binary → Text → Reverse → Decode
--->
+<!-- Hint for players: Binary → Text → Reverse → Decode -->
 </body>
 </html>
