@@ -1,1 +1,32 @@
-Visit admin.html only after decoding correctly
+<!DOCTYPE html>
+<html>
+<head>
+<title>Hidden</title>
+<style>
+body { background:black; color:#00ffcc; font-family:monospace; text-align:center; padding-top:100px; }
+</style>
+</head>
+
+<body>
+
+<h2>> UNAUTHORIZED ACCESS</h2>
+<p>> FINAL KEY REQUIRED</p>
+
+<input id="key" placeholder="Enter key">
+<button onclick="check()">ENTER</button>
+
+<p id="msg"></p>
+
+<script>
+function check(){
+  if(document.getElementById("key").value==="ztketl"){
+    document.getElementById("msg").innerText="OVERRIDE...";
+    setTimeout(()=>window.location="admin.html",1000);
+  } else {
+    document.getElementById("msg").innerText="WRONG";
+  }
+}
+</script>
+
+</body>
+</html>
