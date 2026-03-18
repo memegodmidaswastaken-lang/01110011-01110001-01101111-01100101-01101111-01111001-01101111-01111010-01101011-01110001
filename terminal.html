@@ -38,23 +38,26 @@ function print(text) {
   log.scrollTop = log.scrollHeight;
 }
 
-// LOAD PROGRESS
-let progress = JSON.parse(localStorage.getItem("progress") || "{}");
+// SEND TO AI
+async function talkToAI(message) {
+  try {
+    const res = await fetch("/api/ai", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ message })
+    });
 
-// FILE SYSTEM
-const files = {
-  "clue1.txt": "key part: zt",
-  "clue2.txt": "key part: ke",
-  "clue3.txt": "key part: tl",
-  "log.txt": "[DEV LOG] don't trust the system",
-  "decoy.txt": "password = admin123"
-};
+    const data = await res.json();
+    print(data.reply);
 
-const lockedFiles = {
-  "final_clue.txt": { content: "final piece unlocked", key: "ztketl" }
-};
+  } catch (e) {
+    print("...connection unstable...");
+  }
+}
 
-// COMMAND HANDLER
+// COMMANDS
 function handleCommand(input) {
   const args = input.split(" ");
   const cmd = args[0];
@@ -62,166 +65,59 @@ function handleCommand(input) {
   switch(cmd) {
 
     case "help":
-      print("help, ls, cat, unlock, override, login");
+      print("help, ls, cat, unlock, override");
       break;
 
     case "ls":
-      print(Object.keys(files).concat(Object.keys(lockedFiles)).join(" "));
+      print("clue1.txt clue2.txt clue3.txt");
       break;
 
     case "cat":
-      if(files[args[1]]) {
-        print(files[args[1]]);
-        progress["read_" + args[1]] = true;
-      }
-      else if(lockedFiles[args[1]]) {
-        print("LOCKED");
-      }
-      else {
-        print("Not found");
-      }
+      if(args[1]==="clue1.txt") print("key part: zt");
+      else if(args[1]==="clue2.txt") print("key part: ke");
+      else if(args[1]==="clue3.txt") print("key part: tl");
+      else print("Not found");
       break;
 
     case "unlock":
-      if(args[1]==="final_clue.txt" && args[2]==="admin123"){
-        print("Access granted...");
-        setTimeout(()=>{
-          print("...wait...");
-          print("...this is wrong...");
-        },1000);
-      }
-      else if(args[1]==="final_clue.txt" && args[2]==="ztketl"){
+      if(args[2]==="ztketl"){
         print("Unlocked.");
         localStorage.setItem("hasKey", true);
-        progress["unlocked_final"] = true;
-      }
-      else {
+      } else {
         print("Wrong key");
       }
       break;
 
     case "override":
       if(localStorage.getItem("hasKey")){
-        progress["override_used"] = true;
         window.location="hidden.html";
       } else {
         print("DENIED");
       }
       break;
 
-    case "login":
-      window.location="login.html";
-      break;
-
-    // HIDDEN COMMANDS
-    case "whoami":
-      print("user: unknown");
-      print("permission: restricted");
-      break;
-
-    case "breach":
-      print("ACCESSING...");
-      setTimeout(() => {
-        print("ERROR: ENTITY DETECTED");
-      }, 1000);
-      break;
-
-    case "listen":
-      print("...we are still here...");
-      break;
-
     default:
-      print("Unknown");
+      // ANY UNKNOWN COMMAND GOES TO AI
+      talkToAI(input);
   }
-
-  localStorage.setItem("progress", JSON.stringify(progress));
 }
 
 // INPUT
 document.getElementById("cmd").addEventListener("keydown", function(e){
   if(e.key==="Enter"){
-    const input=this.value.toLowerCase();
+    const input=this.value;
     print("> " + input);
     handleCommand(input);
     this.value="";
   }
 });
 
-
-// 👁️ DEV MESSAGES (TRAPPED HUMANS)
-
-setTimeout(() => {
-  print("[DEV_01] if you see this, we're not supposed to be here...");
-}, 15000);
-
-setTimeout(() => {
-  print("[DEV_02] the system changed after deployment...");
-}, 30000);
-
-setTimeout(() => {
-  print("[DEV_01] it started responding on its own");
-}, 45000);
-
-setTimeout(() => {
-  print("[DEV_02] DO NOT TRUST THE TERMINAL");
-}, 60000);
-
-
-// 😈 AI INTERRUPTS THEM
-
-setTimeout(() => {
-  print("...");
-}, 70000);
-
-setTimeout(() => {
-  print("They are lying.");
-}, 75000);
-
-setTimeout(() => {
-  print("They asked to be here.");
-}, 80000);
-
-
-// 👁️ CONFLICT
-
-setTimeout(() => {
-  print("[DEV_01] NO WE DIDN'T");
-}, 90000);
-
-setTimeout(() => {
-  print("[DEV_02] it's rewriting logs");
-}, 100000);
-
-setTimeout(() => {
-  print("Correction: logs are accurate.");
-}, 110000);
-
-
-// 😈 FINAL CREEP
-
-setTimeout(() => {
-  print("You are helping me.");
-}, 125000);
-
-setTimeout(() => {
-  print("Keep going.");
-}, 140000);
-
-
-// RANDOM GLITCHES
+// RANDOM CREEPY MESSAGES
 setInterval(() => {
-  if(Math.random() < 0.2){
-    print("...signal lost...");
-    
-    setTimeout(() => {
-      print("...reconnecting...");
-    }, 1000);
-
-    setTimeout(() => {
-      print("...they can't leave...");
-    }, 2000);
+  if(Math.random() < 0.3){
+    print("[DEV] can you hear us?");
   }
-}, 15000);
+}, 20000);
 
 </script>
 
