@@ -5,7 +5,7 @@ export default async function handler(req, res) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": "Bearer YOUR_API_KEY_HERE"
+      "Authorization": "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"
     },
     body: JSON.stringify({
       model: "gpt-4o-mini",
