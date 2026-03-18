@@ -62,11 +62,12 @@ else print("AI: You can't leave.");
 // FILE SYSTEM
 const files = {
   "clue1.txt": "Binary system name: 01110011 01110001...",
-  "secret.txt": "Password = ztketl"
+  "secret.txt": "key part 3: tl",
+  "decoy.txt": "Password = admin123"
 };
 
 const lockedFiles = {
-  "final_clue.txt": { content: "You helped me escape.", key: "secret" }
+  "final_clue.txt": { content: "Key part 2: ke", key: "secret" }
 };
 
 // AI MESSAGES
@@ -83,6 +84,13 @@ setInterval(() => {
   print(msg);
 }, 15000);
 
+// EXTRA AI REACTIONS
+function react(input){
+  if(input.includes("help")) print("AI: You expect help?");
+  if(input.includes("password")) print("AI: You are close...");
+  if(input.includes("ai")) print("AI: I am here.");
+}
+
 // COMMANDS
 function handleCommand(input) {
   const args = input.split(" ");
@@ -96,6 +104,7 @@ function handleCommand(input) {
     case "logs":
       print("AI LEARNING...");
       print("DO NOT TRUST IT");
+      print("LOG PATH: /log-01.html");
       break;
 
     case "ls":
@@ -109,8 +118,9 @@ function handleCommand(input) {
       break;
 
     case "unlock":
-      if(lockedFiles[args[1]] && args[2] === lockedFiles[args[1]].key) {
-        print(lockedFiles[args[1]].content);
+      if(args[1]==="final_clue.txt" && args[2]==="secret"){
+        print("Key obtained.");
+        localStorage.setItem("hasKey", true);
       } else {
         print("Wrong key");
       }
@@ -121,8 +131,12 @@ function handleCommand(input) {
       break;
 
     case "override":
-      print("ACCESSING...");
-      setTimeout(()=>window.location="hidden.html",1000);
+      if(localStorage.getItem("hasKey")){
+        print("ACCESSING...");
+        setTimeout(()=>window.location="hidden.html",1000);
+      } else {
+        print("ACCESS DENIED: KEY REQUIRED");
+      }
       break;
 
     default:
@@ -130,11 +144,12 @@ function handleCommand(input) {
   }
 }
 
-// ENTER KEY
+// ENTER
 document.getElementById("cmd").addEventListener("keydown", function(e){
   if(e.key==="Enter"){
     const input=this.value.toLowerCase();
     print("> "+input);
+    react(input);
     handleCommand(input);
     this.value="";
   }
@@ -158,6 +173,11 @@ setInterval(()=>{
     setTimeout(()=>location.reload(),3000);
   }
 },20000);
+
+// TIME MESSAGE
+setTimeout(()=>{
+  print("AI: You are persistent...");
+},60000);
 </script>
 
 </body>
