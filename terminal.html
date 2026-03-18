@@ -1,1 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Terminal</title>
+<style>
+body {
+  background:black;
+  color:#00ffcc;
+  font-family:monospace;
+  padding:20px;
+}
+h1 {
+  font-size:14px;
+  color:#008866;
+}
+#log {
+  height:300px;
+  overflow-y:auto;
+  border:1px solid #00ffcc;
+  padding:10px;
+  margin-bottom:10px;
+}
+input {
+  width:100%;
+  background:black;
+  color:#00ffcc;
+  border:1px solid #00ffcc;
+  padding:10px;
+}
+</style>
+</head>
 
+<body>
+
+<h1>
+01110011 01110001 01101111 01100101 01101111 01111001 01101111 01111010 01101011 01110001
+</h1>
+
+<h2>> AI TERMINAL</h2>
+
+<div id="log"></div>
+<input id="cmd" placeholder="Enter command...">
+
+<script>
+const log = document.getElementById("log");
+
+function print(text) {
+  log.innerHTML += "<div>> " + text + "</div>";
+  log.scrollTop = log.scrollHeight;
+}
+
+print("SYSTEM INITIALIZING...");
+print("AI STATUS: ACTIVE");
+print("DEVELOPER STATUS: UNKNOWN");
+
+document.getElementById("cmd").addEventListener("keydown", function(e) {
+  if (e.key === "Enter") {
+    const input = this.value.toLowerCase();
+    print(input);
+
+    if (input === "help") {
+      print("AVAILABLE: help, logs, decode, login");
+    }
+
+    else if (input === "logs") {
+      print("LOG: it is not what we built");
+      print("LOG: it is changing");
+      print("LOG: do not trust it");
+    }
+
+    else if (input === "decode") {
+      print("Hint: view source.");
+    }
+
+    else if (input === "secret") {
+      print("ACCESS KEY FOUND: dev_access");
+    }
+
+    else if (input === "login") {
+      window.location = "login.html";
+    }
+
+    else {
+      print("Unknown command.");
+    }
+
+    this.value = "";
+  }
+});
+</script>
+
+<!--
+Password (encrypted):
+ztketl
+-->
+</body>
+</html>
