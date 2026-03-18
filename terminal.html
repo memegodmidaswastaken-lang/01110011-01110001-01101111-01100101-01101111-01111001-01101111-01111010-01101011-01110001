@@ -38,28 +38,32 @@ function print(text) {
   log.scrollTop = log.scrollHeight;
 }
 
-// TRACK PROGRESS
+// LOAD PROGRESS
 let progress = JSON.parse(localStorage.getItem("progress") || "{}");
 
-// FILE SYSTEM
+// FILE SYSTEM (PUZZLE SPLIT)
 const files = {
-  "clue1.txt": "Binary system...",
-  "secret.txt": "key part: tl",
-  "decoy.txt": "Password = admin123"
+  "clue1.txt": "key part: zt",
+  "clue2.txt": "key part: ke",
+  "clue3.txt": "key part: tl",
+  "log.txt": "they told us not to combine them...",
+  "decoy.txt": "password = admin123"
 };
 
+// LOCKED FILE
 const lockedFiles = {
-  "final_clue.txt": { content: "key part: ke", key: "secret" }
+  "final_clue.txt": { content: "final piece unlocked", key: "ztketl" }
 };
 
-// COMMANDS
+// COMMAND HANDLER
 function handleCommand(input) {
   const args = input.split(" ");
   const cmd = args[0];
 
   switch(cmd) {
+
     case "help":
-      print("help, logs, ls, cat, unlock, login, override");
+      print("help, ls, cat, unlock, override, login");
       break;
 
     case "ls":
@@ -69,18 +73,32 @@ function handleCommand(input) {
     case "cat":
       if(files[args[1]]) {
         print(files[args[1]]);
-        progress["read_"+args[1]] = true;
+        progress["read_" + args[1]] = true;
       }
-      else if(lockedFiles[args[1]]) print("LOCKED");
-      else print("Not found");
+      else if(lockedFiles[args[1]]) {
+        print("LOCKED");
+      }
+      else {
+        print("Not found");
+      }
       break;
 
     case "unlock":
-      if(args[1]==="final_clue.txt" && args[2]==="secret"){
+      // TRAP PATH
+      if(args[1]==="final_clue.txt" && args[2]==="admin123"){
+        print("Access granted...");
+        setTimeout(()=>{
+          print("...wait...");
+          print("...you shouldn't have done that...");
+        },1000);
+      }
+      // REAL SOLUTION
+      else if(args[1]==="final_clue.txt" && args[2]==="ztketl"){
         print("Unlocked.");
         progress["unlocked_final"] = true;
         localStorage.setItem("hasKey", true);
-      } else {
+      }
+      else {
         print("Wrong key");
       }
       break;
@@ -98,6 +116,24 @@ function handleCommand(input) {
       window.location="login.html";
       break;
 
+    // 🔒 HIDDEN COMMANDS (NOT IN HELP)
+
+    case "whoami":
+      print("user: unknown");
+      print("permission: restricted");
+      break;
+
+    case "breach":
+      print("ACCESSING...");
+      setTimeout(() => {
+        print("ERROR: ENTITY DETECTED");
+      }, 1000);
+      break;
+
+    case "listen":
+      print("...it hears you...");
+      break;
+
     default:
       print("Unknown");
   }
@@ -105,15 +141,40 @@ function handleCommand(input) {
   localStorage.setItem("progress", JSON.stringify(progress));
 }
 
-// ENTER
+// INPUT LISTENER
 document.getElementById("cmd").addEventListener("keydown", function(e){
   if(e.key==="Enter"){
     const input=this.value.toLowerCase();
-    print("> "+input);
+    print("> " + input);
     handleCommand(input);
     this.value="";
   }
 });
+
+// 👁️ RANDOM GLITCH EVENTS
+setInterval(() => {
+  if(Math.random() < 0.2){
+    print("...signal lost...");
+    
+    setTimeout(() => {
+      print("...reconnecting...");
+    }, 1000);
+
+    setTimeout(() => {
+      print("...something else is here...");
+    }, 2000);
+  }
+}, 15000);
+
+// 👁️ SLOW AI AWARENESS
+setTimeout(() => {
+  print("You keep coming back.");
+}, 30000);
+
+setTimeout(() => {
+  print("Why?");
+}, 45000);
+
 </script>
 
 </body>
