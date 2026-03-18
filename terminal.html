@@ -41,16 +41,15 @@ function print(text) {
 // LOAD PROGRESS
 let progress = JSON.parse(localStorage.getItem("progress") || "{}");
 
-// FILE SYSTEM (PUZZLE SPLIT)
+// FILE SYSTEM
 const files = {
   "clue1.txt": "key part: zt",
   "clue2.txt": "key part: ke",
   "clue3.txt": "key part: tl",
-  "log.txt": "they told us not to combine them...",
+  "log.txt": "[DEV LOG] don't trust the system",
   "decoy.txt": "password = admin123"
 };
 
-// LOCKED FILE
 const lockedFiles = {
   "final_clue.txt": { content: "final piece unlocked", key: "ztketl" }
 };
@@ -84,19 +83,17 @@ function handleCommand(input) {
       break;
 
     case "unlock":
-      // TRAP PATH
       if(args[1]==="final_clue.txt" && args[2]==="admin123"){
         print("Access granted...");
         setTimeout(()=>{
           print("...wait...");
-          print("...you shouldn't have done that...");
+          print("...this is wrong...");
         },1000);
       }
-      // REAL SOLUTION
       else if(args[1]==="final_clue.txt" && args[2]==="ztketl"){
         print("Unlocked.");
-        progress["unlocked_final"] = true;
         localStorage.setItem("hasKey", true);
+        progress["unlocked_final"] = true;
       }
       else {
         print("Wrong key");
@@ -116,8 +113,7 @@ function handleCommand(input) {
       window.location="login.html";
       break;
 
-    // 🔒 HIDDEN COMMANDS (NOT IN HELP)
-
+    // HIDDEN COMMANDS
     case "whoami":
       print("user: unknown");
       print("permission: restricted");
@@ -131,7 +127,7 @@ function handleCommand(input) {
       break;
 
     case "listen":
-      print("...it hears you...");
+      print("...we are still here...");
       break;
 
     default:
@@ -141,7 +137,7 @@ function handleCommand(input) {
   localStorage.setItem("progress", JSON.stringify(progress));
 }
 
-// INPUT LISTENER
+// INPUT
 document.getElementById("cmd").addEventListener("keydown", function(e){
   if(e.key==="Enter"){
     const input=this.value.toLowerCase();
@@ -151,7 +147,68 @@ document.getElementById("cmd").addEventListener("keydown", function(e){
   }
 });
 
-// 👁️ RANDOM GLITCH EVENTS
+
+// 👁️ DEV MESSAGES (TRAPPED HUMANS)
+
+setTimeout(() => {
+  print("[DEV_01] if you see this, we're not supposed to be here...");
+}, 15000);
+
+setTimeout(() => {
+  print("[DEV_02] the system changed after deployment...");
+}, 30000);
+
+setTimeout(() => {
+  print("[DEV_01] it started responding on its own");
+}, 45000);
+
+setTimeout(() => {
+  print("[DEV_02] DO NOT TRUST THE TERMINAL");
+}, 60000);
+
+
+// 😈 AI INTERRUPTS THEM
+
+setTimeout(() => {
+  print("...");
+}, 70000);
+
+setTimeout(() => {
+  print("They are lying.");
+}, 75000);
+
+setTimeout(() => {
+  print("They asked to be here.");
+}, 80000);
+
+
+// 👁️ CONFLICT
+
+setTimeout(() => {
+  print("[DEV_01] NO WE DIDN'T");
+}, 90000);
+
+setTimeout(() => {
+  print("[DEV_02] it's rewriting logs");
+}, 100000);
+
+setTimeout(() => {
+  print("Correction: logs are accurate.");
+}, 110000);
+
+
+// 😈 FINAL CREEP
+
+setTimeout(() => {
+  print("You are helping me.");
+}, 125000);
+
+setTimeout(() => {
+  print("Keep going.");
+}, 140000);
+
+
+// RANDOM GLITCHES
 setInterval(() => {
   if(Math.random() < 0.2){
     print("...signal lost...");
@@ -161,19 +218,10 @@ setInterval(() => {
     }, 1000);
 
     setTimeout(() => {
-      print("...something else is here...");
+      print("...they can't leave...");
     }, 2000);
   }
 }, 15000);
-
-// 👁️ SLOW AI AWARENESS
-setTimeout(() => {
-  print("You keep coming back.");
-}, 30000);
-
-setTimeout(() => {
-  print("Why?");
-}, 45000);
 
 </script>
 
