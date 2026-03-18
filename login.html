@@ -20,19 +20,30 @@ input { margin:10px; padding:10px; background:black; color:#00ffcc; border:1px s
 
 <script>
 function login(){
-  if(
-    document.getElementById("user").value==="dev_access" &&
-    document.getElementById("pass").value==="secret"
-  ){
-    document.getElementById("msg").innerText="ACCESS GRANTED";
-    setTimeout(()=>window.location="admin.html",1000);
-  } else {
+  const u = document.getElementById("user").value;
+  const p = document.getElementById("pass").value;
+
+  if(u==="admin" && p==="secret"){
+    localStorage.setItem("role","admin");
+    window.location="admin.html";
+  }
+  else if(u==="dev" && p==="dev123"){
+    localStorage.setItem("role","dev");
+    window.location="dev.html";
+  }
+  else if(u==="mod" && p==="mod123"){
+    localStorage.setItem("role","mod");
+    window.location="mod.html";
+  }
+  else if(u==="owner" && p==="owner123"){
+    localStorage.setItem("role","owner");
+    window.location="owner.html";
+  }
+  else {
     document.getElementById("msg").innerText="DENIED";
   }
 }
 </script>
-
-<!-- key hint: combine parts -->
 
 </body>
 </html>
