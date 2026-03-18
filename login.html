@@ -35,15 +35,13 @@ function login(){
     localStorage.setItem("role","mod");
     window.location="mod.html";
   }
-  else if(u==="owner" && p==="owner123"){
-    localStorage.setItem("role","owner");
-    window.location="owner.html";
-  }
   else {
     document.getElementById("msg").innerText="DENIED";
   }
 }
 </script>
+
+<!-- nothing here... or is there? -->
 
 </body>
 </html>
