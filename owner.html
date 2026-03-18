@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Owner Panel</title>
+<style>
+body { background:black; color:#00ffcc; font-family:monospace; padding:40px; }
+</style>
+</head>
+
+<body>
+
+<h2>> OWNER PANEL</h2>
+
+<div id="data"></div>
+
+<script>
+const data = document.getElementById("data");
+const progress = JSON.parse(localStorage.getItem("progress") || "{}");
+
+data.innerHTML = "<h3>Player Progress:</h3>";
+
+for(let key in progress){
+  data.innerHTML += "<p>> " + key + " : " + progress[key] + "</p>";
+}
+</script>
+
+</body>
+</html>
