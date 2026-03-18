@@ -10,26 +10,38 @@ body {
   text-align:center;
   padding-top:100px;
 }
-h1 { font-size:14px; color:#008866; }
-a { color:#00ffcc; }
+
+/* GLITCH */
+.glitch {
+  animation: glitch 0.2s infinite;
+}
+@keyframes glitch {
+  0% { transform: translate(1px, -1px); }
+  25% { transform: translate(-1px, 1px); }
+  50% { transform: translate(1px, 1px); }
+  75% { transform: translate(-1px, -1px); }
+  100% { transform: translate(0, 0); }
+}
 </style>
 </head>
 
 <body>
 
-<h1>
-01110011 01110001 01101111 01100101 01101111 01111001 01101111 01111010 01101011 01110001
-</h1>
-
 <h2>> SYSTEM FAILURE</h2>
-<p>> If you're seeing this... something went wrong.</p>
-<p>> Our developers are trapped inside the system.</p>
+<p>> Developers are missing.</p>
 
 <a href="terminal.html">> ACCESS TERMINAL</a>
 
-<!-- Clue in source:
-Binary password: ztketl
--->
+<script>
+setInterval(() => {
+  if(Math.random() < 0.2) {
+    document.body.classList.add("glitch");
+    setTimeout(() => document.body.classList.remove("glitch"), 200);
+  }
+}, 3000);
+</script>
+
+<!-- Binary password hidden: ztketl -->
 
 </body>
 </html>
