@@ -9,29 +9,27 @@ export default async function handler(req, res) {
         Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini", // safe model
+        model: "gpt-4o-mini",
         messages: [
           {
             role: "system",
             content:
-              "You are trapped developers inside an AI system. You are scared, send warnings, and sometimes glitch or contradict yourself."
+              "You are trapped developers inside an AI system. You are scared and glitchy."
           },
           {
             role: "user",
             content: message
           }
-        ],
-        max_tokens: 150
+        ]
       })
     });
 
     const data = await response.json();
 
-    console.log("OPENAI RESPONSE:", data);
-
-    if (!data.choices) {
+    // 👇 RETURN FULL ERROR IF EXISTS
+    if (!response.ok) {
       return res.status(200).json({
-        reply: "API ERROR: " + JSON.stringify(data)
+        reply: "ERROR: " + JSON.stringify(data)
       });
     }
 
@@ -40,9 +38,8 @@ export default async function handler(req, res) {
     });
 
   } catch (err) {
-    console.error("SERVER ERROR:", err);
-    res.status(500).json({
-      reply: "connection unstable..."
+    res.status(200).json({
+      reply: "SERVER ERROR: " + err.message
     });
   }
 }
