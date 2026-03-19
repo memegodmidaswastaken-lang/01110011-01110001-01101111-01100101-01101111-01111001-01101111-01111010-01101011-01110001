@@ -1,6 +1,12 @@
 export default async function handler(req, res) {
   try {
-    const { message } = req.body;
+    // 🧠 HANDLE EMPTY BODY (like visiting in browser)
+    let message = "hello";
+
+    if (req.body) {
+      // if body exists, use it
+      message = req.body.message || "hello";
+    }
 
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
@@ -14,7 +20,7 @@ export default async function handler(req, res) {
           {
             role: "system",
             content:
-              "You are trapped developers inside an AI system. You are scared and glitchy."
+              "You are trapped developers inside an AI system. You are scared, glitchy, and sometimes contradict yourself."
           },
           {
             role: "user",
@@ -26,7 +32,6 @@ export default async function handler(req, res) {
 
     const data = await response.json();
 
-    // 👇 RETURN FULL ERROR IF EXISTS
     if (!response.ok) {
       return res.status(200).json({
         reply: "ERROR: " + JSON.stringify(data)
