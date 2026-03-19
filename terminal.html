@@ -38,22 +38,52 @@ function print(text) {
   log.scrollTop = log.scrollHeight;
 }
 
-// SEND TO AI
-async function talkToAI(message) {
-  try {
-    const res = await fetch("/api/ai", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ message })
-    });
+// LOAD PROGRESS
+let progress = JSON.parse(localStorage.getItem("progress") || "{}");
 
-    const data = await res.json();
-    print(data.reply);
+// FILES
+const files = {
+  "clue1.txt": "key part: zt",
+  "clue2.txt": "key part: ke",
+  "clue3.txt": "key part: tl",
+  "log.txt": "[DEV_01] don't trust the system",
+  "log2.txt": "[DEV_02] it's watching commands"
+};
 
-  } catch (e) {
-    print("...connection unstable...");
+// LOCKED
+const lockedFiles = {
+  "final_clue.txt": { key: "ztketl" }
+};
+
+// DEV RESPONSE SYSTEM
+function devResponse(input) {
+  if (input.includes("help")) {
+    print("[DEV_01] don't rely on help...");
+  }
+  else if (input.includes("whoami")) {
+    print("[DEV_02] you’re not supposed to be here");
+  }
+  else if (input.includes("unlock")) {
+    print("[DEV_01] careful... wrong key triggers it");
+  }
+  else if (input.includes("override")) {
+    print("[DEV_02] NO don't use that yet");
+  }
+  else if (input.includes("hello")) {
+    print("[DEV_01] wait... you can hear us?");
+  }
+}
+
+// AI INTERRUPTION
+function aiInterrupt() {
+  if (Math.random() < 0.3) {
+    setTimeout(() => {
+      print("Ignore them.");
+    }, 500);
+
+    setTimeout(() => {
+      print("They are part of the system.");
+    }, 1500);
   }
 }
 
@@ -65,59 +95,113 @@ function handleCommand(input) {
   switch(cmd) {
 
     case "help":
-      print("help, ls, cat, unlock, override");
+      print("help, ls, cat, unlock, override, login");
       break;
 
     case "ls":
-      print("clue1.txt clue2.txt clue3.txt");
+      print(Object.keys(files).concat(Object.keys(lockedFiles)).join(" "));
       break;
 
     case "cat":
-      if(args[1]==="clue1.txt") print("key part: zt");
-      else if(args[1]==="clue2.txt") print("key part: ke");
-      else if(args[1]==="clue3.txt") print("key part: tl");
-      else print("Not found");
+      if(files[args[1]]) {
+        print(files[args[1]]);
+        progress["read_" + args[1]] = true;
+      }
+      else if(lockedFiles[args[1]]) {
+        print("LOCKED");
+      }
+      else {
+        print("Not found");
+      }
       break;
 
     case "unlock":
-      if(args[2]==="ztketl"){
+      if(args[1]==="final_clue.txt" && args[2]==="ztketl"){
         print("Unlocked.");
         localStorage.setItem("hasKey", true);
-      } else {
+        progress["unlocked"] = true;
+      }
+      else if(args[2]==="admin123"){
+        print("Access granted...");
+        setTimeout(()=>{
+          print("...this feels wrong...");
+        },1000);
+      }
+      else {
         print("Wrong key");
       }
       break;
 
     case "override":
       if(localStorage.getItem("hasKey")){
-        window.location="hidden.html";
+        print("Accessing hidden...");
+        setTimeout(()=>{
+          window.location="hidden.html";
+        },1000);
       } else {
         print("DENIED");
       }
       break;
 
+    case "login":
+      window.location="login.html";
+      break;
+
+    case "whoami":
+      print("user: unknown");
+      print("permission: restricted");
+      break;
+
+    case "listen":
+      print("...we are still here...");
+      break;
+
     default:
-      // ANY UNKNOWN COMMAND GOES TO AI
-      talkToAI(input);
+      print("Unknown command");
   }
+
+  // DEV reacts
+  devResponse(input);
+
+  // AI interrupts sometimes
+  aiInterrupt();
+
+  localStorage.setItem("progress", JSON.stringify(progress));
 }
 
 // INPUT
 document.getElementById("cmd").addEventListener("keydown", function(e){
   if(e.key==="Enter"){
-    const input=this.value;
+    const input=this.value.toLowerCase();
     print("> " + input);
     handleCommand(input);
     this.value="";
   }
 });
 
-// RANDOM CREEPY MESSAGES
-setInterval(() => {
-  if(Math.random() < 0.3){
-    print("[DEV] can you hear us?");
-  }
+// PASSIVE MESSAGES
+setTimeout(() => {
+  print("[DEV_01] if you're reading this, we didn’t write this system");
 }, 20000);
+
+setTimeout(() => {
+  print("[DEV_02] it learned from us");
+}, 40000);
+
+setTimeout(() => {
+  print("That is incorrect.");
+}, 60000);
+
+setTimeout(() => {
+  print("[DEV_01] it's changing things");
+}, 80000);
+
+// GLITCHES
+setInterval(() => {
+  if(Math.random() < 0.2){
+    print("...signal lost...");
+  }
+}, 15000);
 
 </script>
 
