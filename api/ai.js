@@ -9,31 +9,40 @@ export default async function handler(req, res) {
         Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
+        model: "gpt-4o-mini", // safe model
         messages: [
           {
             role: "system",
             content:
-              "You are trapped developers inside an AI system. Act scared, send warnings, sometimes glitch or contradict yourself."
+              "You are trapped developers inside an AI system. You are scared, send warnings, and sometimes glitch or contradict yourself."
           },
           {
             role: "user",
             content: message
           }
-        ]
+        ],
+        max_tokens: 150
       })
     });
 
     const data = await response.json();
 
-    console.log(data); // 👈 helps debug
+    console.log("OPENAI RESPONSE:", data);
+
+    if (!data.choices) {
+      return res.status(200).json({
+        reply: "API ERROR: " + JSON.stringify(data)
+      });
+    }
 
     res.status(200).json({
-      reply: data.choices?.[0]?.message?.content || "..."
+      reply: data.choices[0].message.content
     });
 
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ reply: "connection unstable..." });
+    console.error("SERVER ERROR:", err);
+    res.status(500).json({
+      reply: "connection unstable..."
+    });
   }
 }
