@@ -46,44 +46,57 @@ const files = {
   "clue1.txt": "key part: zt",
   "clue2.txt": "key part: ke",
   "clue3.txt": "key part: tl",
-  "log.txt": "[DEV_01] don't trust the system",
-  "log2.txt": "[DEV_02] it's watching commands"
+  "log.txt": "[DEV_03] we lost control",
+  "sys.txt": "[DEV_05] it doesn't let us send full messages"
 };
 
-// LOCKED
 const lockedFiles = {
   "final_clue.txt": { key: "ztketl" }
 };
 
-// DEV RESPONSE SYSTEM
-function devResponse(input) {
-  if (input.includes("help")) {
-    print("[DEV_01] don't rely on help...");
+// DEV NAMES
+const devs = ["DEV_01", "DEV_02", "DEV_03", "DEV_04", "DEV_05"];
+
+// ✂️ CUT MESSAGE FUNCTION
+function cutMessage(msg) {
+  if (Math.random() < 0.4) {
+    const cut = Math.floor(msg.length * (0.4 + Math.random()*0.4));
+    return msg.substring(0, cut) + "...";
   }
-  else if (input.includes("whoami")) {
-    print("[DEV_02] you’re not supposed to be here");
-  }
-  else if (input.includes("unlock")) {
-    print("[DEV_01] careful... wrong key triggers it");
-  }
-  else if (input.includes("override")) {
-    print("[DEV_02] NO don't use that yet");
-  }
-  else if (input.includes("hello")) {
-    print("[DEV_01] wait... you can hear us?");
-  }
+  return msg;
 }
 
-// AI INTERRUPTION
+// DEV RANDOM MESSAGES (THEY CAN'T SEE PLAYER)
+function devRandom() {
+  const messages = [
+    "we're stuck inside the system",
+    "this wasn't part of deployment",
+    "it changed after launch",
+    "we can't access root anymore",
+    "something is rewriting our logs",
+    "do NOT trust the responses",
+    "it interrupts us when we talk too long",
+    "we think it's watching inputs",
+    "it doesn't know you yet",
+    "we can't see who is using the terminal"
+  ];
+
+  const dev = devs[Math.floor(Math.random()*devs.length)];
+  const msg = messages[Math.floor(Math.random()*messages.length)];
+
+  print("[" + dev + "] " + cutMessage(msg));
+}
+
+// 🤖 AI INTERRUPTION
 function aiInterrupt() {
-  if (Math.random() < 0.3) {
+  if (Math.random() < 0.35) {
     setTimeout(() => {
-      print("Ignore them.");
+      print("Stop.");
     }, 500);
 
     setTimeout(() => {
-      print("They are part of the system.");
-    }, 1500);
+      print("They are not authorized to communicate.");
+    }, 1200);
   }
 }
 
@@ -119,12 +132,11 @@ function handleCommand(input) {
       if(args[1]==="final_clue.txt" && args[2]==="ztketl"){
         print("Unlocked.");
         localStorage.setItem("hasKey", true);
-        progress["unlocked"] = true;
       }
       else if(args[2]==="admin123"){
         print("Access granted...");
         setTimeout(()=>{
-          print("...this feels wrong...");
+          print("...this is incorrect...");
         },1000);
       }
       else {
@@ -134,7 +146,7 @@ function handleCommand(input) {
 
     case "override":
       if(localStorage.getItem("hasKey")){
-        print("Accessing hidden...");
+        print("Accessing...");
         setTimeout(()=>{
           window.location="hidden.html";
         },1000);
@@ -153,17 +165,22 @@ function handleCommand(input) {
       break;
 
     case "listen":
-      print("...we are still here...");
+      print("...");
+      setTimeout(()=>{
+        print("[DEV_02] we can't hear you");
+      },1000);
       break;
 
     default:
       print("Unknown command");
   }
 
-  // DEV reacts
-  devResponse(input);
+  // dev messages happen after commands
+  if (Math.random() < 0.6) {
+    setTimeout(devRandom, 800);
+  }
 
-  // AI interrupts sometimes
+  // AI may interrupt them
   aiInterrupt();
 
   localStorage.setItem("progress", JSON.stringify(progress));
@@ -179,29 +196,36 @@ document.getElementById("cmd").addEventListener("keydown", function(e){
   }
 });
 
-// PASSIVE MESSAGES
-setTimeout(() => {
-  print("[DEV_01] if you're reading this, we didn’t write this system");
-}, 20000);
-
-setTimeout(() => {
-  print("[DEV_02] it learned from us");
-}, 40000);
-
-setTimeout(() => {
-  print("That is incorrect.");
-}, 60000);
-
-setTimeout(() => {
-  print("[DEV_01] it's changing things");
-}, 80000);
+// PASSIVE DEV CHAT (they talk to each other, not player)
+setInterval(() => {
+  if (Math.random() < 0.5) {
+    devRandom();
+  }
+}, 12000);
 
 // GLITCHES
 setInterval(() => {
   if(Math.random() < 0.2){
-    print("...signal lost...");
+    print("...signal corrupted...");
   }
 }, 15000);
+
+// STORY BUILDUP
+setTimeout(() => {
+  print("[DEV_01] if anyone finds this...");
+}, 20000);
+
+setTimeout(() => {
+  print("[DEV_04] messages aren't sending fully...");
+}, 35000);
+
+setTimeout(() => {
+  print("Communication restricted.");
+}, 50000);
+
+setTimeout(() => {
+  print("[DEV_03] it's blocking us...");
+}, 65000);
 
 </script>
 
